@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[dependencies.forgottentf]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.forgottentf]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.forgottentf]]
+    modId="twilightforest"
+    mandatory=true
+    versionRange="[4.2,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[mods]]
+modId="forgottentf"
+version="1.0.0"
+displayName="Beyond The End — Twilight Forest Addon"
+description="Twilight Forest integration for Ender's Journey — Beyond The End"
