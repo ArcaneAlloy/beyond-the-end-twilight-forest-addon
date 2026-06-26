@@ -1,0 +1,7 @@
+{
+  "loader": "forgottentf:giant_carminite",
+  "textures": {
+    "all": "twilightforest:block/carminite_block",
+    "particle": "twilightforest:block/carminite_block"
+  }
+}
