@@ -1,7 +1,7 @@
 package com.arcanealloy.forgottentf;
 
 import com.arcanealloy.forgottentf.event.GiantCarminiteBreakHandler;
-import com.arcanealloy.forgottentf.event.UrGhastDeathHandler;
+import com.arcanealloy.forgottentf.event.TrollCaveHandler;
 import com.arcanealloy.forgottentf.init.ModBlocks;
 import com.arcanealloy.forgottentf.init.ModBlockEntities;
 import com.arcanealloy.forgottentf.init.ModItems;
@@ -23,6 +23,6 @@ public class ForgottenTF {
 
         // Registro manual del event handler en el Forge event bus
         MinecraftForge.EVENT_BUS.register(GiantCarminiteBreakHandler.class);
-        MinecraftForge.EVENT_BUS.register(UrGhastDeathHandler.class);
+        MinecraftForge.EVENT_BUS.register(TrollCaveHandler.class);
     }
 }
