@@ -30,6 +30,8 @@ public class TrollCaveHandler {
             new ResourceLocation("twilightforest", "troll_cave");
     private static final ResourceLocation GIANT_OBSIDIAN_RL =
             new ResourceLocation("twilightforest", "giant_obsidian");
+    private static final ResourceLocation TROLL_CAVE_STRUCTURE =
+            new ResourceLocation("twilightforest", "troll_cave");
 
     private static final Set<Long> processedCaves = new HashSet<>();
     private static int tickCounter = 0;
@@ -125,5 +127,36 @@ public class TrollCaveHandler {
         }
 
         LOGGER.info("[ForgottenTF] Placed giant_carminite_block inside troll vault at {}", interior);
+
+        // Eliminar la caja de obsidiana con el cofre de magic beans
+        // size=30, mid=15 -> obsidiana en (minX+13, minY, minZ+13) a (minX+16, minY+3, minZ+16)
+        // Buscamos la caja de obsidiana en el bounding box de la cueva principal
+        removeTreasureCrate(serverLevel, bb);
+    }
+
+    private static void removeTreasureCrate(ServerLevel serverLevel, BoundingBox bb) {
+        // Buscar el cofre de obsidiana — está en mid-2 a mid+1 relativo al bb de la cueva
+        // size=30, mid=15: offset (13,0,13) a (16,3,16) desde minX,minY,minZ
+        int mid = 15;
+        BlockPos crateOrigin = new BlockPos(
+                bb.minX() + mid - 2,
+                bb.minY(),
+                bb.minZ() + mid - 2
+        );
+
+        // Eliminar todo en el área 4x4x4 de la caja (obsidiana + cofre + aire)
+        for (int dx = 0; dx <= 3; dx++) {
+            for (int dz = 0; dz <= 3; dz++) {
+                for (int dy = 0; dy <= 3; dy++) {
+                    BlockPos target = crateOrigin.offset(dx, dy, dz);
+                    BlockState state = serverLevel.getBlockState(target);
+                    if (state.getBlock() == Blocks.OBSIDIAN ||
+                        state.getBlock().getDescriptionId().contains("chest")) {
+                        serverLevel.setBlock(target, Blocks.AIR.defaultBlockState(), 3);
+                    }
+                }
+            }
+        }
+        LOGGER.info("[ForgottenTF] Removed obsidian treasure crate at {}", crateOrigin);
     }
 }
