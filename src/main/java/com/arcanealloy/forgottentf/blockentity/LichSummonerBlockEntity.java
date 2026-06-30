@@ -1,6 +1,7 @@
 package com.arcanealloy.forgottentf.blockentity;
 
 import com.arcanealloy.forgottentf.init.ModBlockEntities;
+import com.arcanealloy.forgottentf.init.ModBlocks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -9,20 +10,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import java.util.List;
 
 public class LichSummonerBlockEntity extends BlockEntity {
 
-    private static final int DETECTION_RANGE = 8;
+    private static final int DETECTION_RANGE = 4;
     private static final int TICK_INTERVAL   = 40; // cada 2 segundos
+    // Cuántos bloques hacia arriba comprobar si hay otro summoner por encima
+    private static final int VERTICAL_CHECK_RANGE = 30;
 
     private static final String[] TF_PROGRESS_ADVANCEMENTS = {
         "twilightforest:progress_naga",
@@ -42,7 +43,6 @@ public class LichSummonerBlockEntity extends BlockEntity {
 
     private boolean hasSpawned = false;
     private int tickCounter    = 0;
-    // Flag para destruir el bloque 1 tick DESPUÉS del spawn
     private boolean pendingRemoval = false;
 
     public LichSummonerBlockEntity(BlockPos pos, BlockState state) {
@@ -52,7 +52,6 @@ public class LichSummonerBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state,
                                   LichSummonerBlockEntity be) {
 
-        // Tick 1 después del spawn: destruir el bloque
         if (be.pendingRemoval) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             return;
@@ -64,24 +63,29 @@ public class LichSummonerBlockEntity extends BlockEntity {
         if (be.tickCounter < TICK_INTERVAL) return;
         be.tickCounter = 0;
 
-        // Detectar jugadores en rango
         AABB box = new AABB(pos).inflate(DETECTION_RANGE);
         List<ServerPlayer> players = level.getEntitiesOfClass(ServerPlayer.class, box);
         if (players.isEmpty()) return;
 
         ServerLevel serverLevel = (ServerLevel) level;
 
-        // Marcar como spawneado PRIMERO — antes de cualquier otra cosa
-        // Así aunque crashee o el chunk se recargue, no vuelve a spawnear
-        be.hasSpawned = true;
-        be.setChanged(); // forzar guardado del NBT inmediatamente
+        // Comprobar si hay OTRO lich_summoner por encima de este en la misma columna X,Z
+        // Si lo hay, este NO es el de arriba del todo — nos desactivamos sin hacer nada
+        if (hasSummonerAbove(serverLevel, pos)) {
+            be.hasSpawned = true;
+            be.setChanged();
+            be.pendingRemoval = true;
+            return;
+        }
 
-        // Otorgar advancements de progresión TF a jugadores cercanos
+        // Somos el summoner más alto de la columna — proceder normalmente
+        be.hasSpawned = true;
+        be.setChanged();
+
         for (ServerPlayer player : players) {
             grantTFProgressAdvancements(serverLevel, player);
         }
 
-        // Spawnear el Lich encima
         EntityType<?> lichType = ForgeRegistries.ENTITY_TYPES.getValue(
                 new ResourceLocation("twilightforest", "lich"));
 
@@ -94,8 +98,22 @@ public class LichSummonerBlockEntity extends BlockEntity {
             }
         }
 
-        // Programar autodestrucción para el siguiente tick
         be.pendingRemoval = true;
+    }
+
+    /**
+     * Comprueba si hay otro lich_summoner sin disparar por encima de esta posición,
+     * en la misma columna X,Z, dentro de VERTICAL_CHECK_RANGE bloques.
+     */
+    private static boolean hasSummonerAbove(ServerLevel level, BlockPos pos) {
+        BlockPos.MutableBlockPos check = new BlockPos.MutableBlockPos();
+        for (int dy = 1; dy <= VERTICAL_CHECK_RANGE; dy++) {
+            check.set(pos.getX(), pos.getY() + dy, pos.getZ());
+            if (level.getBlockState(check).getBlock() == ModBlocks.LICH_SUMMONER.get()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void grantTFProgressAdvancements(ServerLevel level, ServerPlayer player) {
