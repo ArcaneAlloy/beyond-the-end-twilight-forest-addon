@@ -1,147 +1,24 @@
 package com.arcanealloy.forgottentf.blockentity;
 
 import com.arcanealloy.forgottentf.init.ModBlockEntities;
-import com.arcanealloy.forgottentf.init.ModBlocks;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
-import java.util.List;
 
+/**
+ * Antiguo invocador del Lich del Infested Temple. Ya no invoca nada: el Lich lo saca InfestedTempleLichHandler
+ * al entrar en la sala superior del templo. El bloque se mantiene registrado para que los mundos que ya lo tengan
+ * carguen bien, y se borra solo en cuanto su chunk está activo.
+ */
 public class LichSummonerBlockEntity extends BlockEntity {
-
-    private static final int DETECTION_RANGE = 4;
-    private static final int TICK_INTERVAL   = 40; // cada 2 segundos
-    // Cuántos bloques hacia arriba comprobar si hay otro summoner por encima
-    private static final int VERTICAL_CHECK_RANGE = 30;
-
-    private static final String[] TF_PROGRESS_ADVANCEMENTS = {
-        "twilightforest:progress_naga",
-        "twilightforest:progress_lich",
-        "twilightforest:progress_labyrinth",
-        "twilightforest:progress_knights",
-        "twilightforest:progress_thorns",
-        "twilightforest:progress_hydra",
-        "twilightforest:progress_ur_ghast",
-        "twilightforest:progress_glacier",
-        "twilightforest:progress_yeti",
-        "twilightforest:progress_troll",
-        "twilightforest:progress_merge",
-        "twilightforest:progress_castle",
-        "twilightforest:progress_trophy_pedestal"
-    };
-
-    private boolean hasSpawned = false;
-    private int tickCounter    = 0;
-    private boolean pendingRemoval = false;
 
     public LichSummonerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.LICH_SUMMONER.get(), pos, state);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state,
-                                  LichSummonerBlockEntity be) {
-
-        if (be.pendingRemoval) {
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            return;
-        }
-
-        if (be.hasSpawned) return;
-
-        be.tickCounter++;
-        if (be.tickCounter < TICK_INTERVAL) return;
-        be.tickCounter = 0;
-
-        AABB box = new AABB(pos).inflate(DETECTION_RANGE);
-        List<ServerPlayer> players = level.getEntitiesOfClass(ServerPlayer.class, box);
-        if (players.isEmpty()) return;
-
-        ServerLevel serverLevel = (ServerLevel) level;
-
-        // Comprobar si hay OTRO lich_summoner por encima de este en la misma columna X,Z
-        // Si lo hay, este NO es el de arriba del todo — nos desactivamos sin hacer nada
-        if (hasSummonerAbove(serverLevel, pos)) {
-            be.hasSpawned = true;
-            be.setChanged();
-            be.pendingRemoval = true;
-            return;
-        }
-
-        // Somos el summoner más alto de la columna — proceder normalmente
-        be.hasSpawned = true;
-        be.setChanged();
-
-        for (ServerPlayer player : players) {
-            grantTFProgressAdvancements(serverLevel, player);
-        }
-
-        EntityType<?> lichType = ForgeRegistries.ENTITY_TYPES.getValue(
-                new ResourceLocation("twilightforest", "lich"));
-
-        if (lichType != null) {
-            BlockPos spawnPos = pos.above(2);
-            Entity entity = lichType.create(serverLevel);
-            if (entity != null) {
-                entity.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0f, 0f);
-                serverLevel.addFreshEntity(entity);
-            }
-        }
-
-        be.pendingRemoval = true;
-    }
-
-    /**
-     * Comprueba si hay otro lich_summoner sin disparar por encima de esta posición,
-     * en la misma columna X,Z, dentro de VERTICAL_CHECK_RANGE bloques.
-     */
-    private static boolean hasSummonerAbove(ServerLevel level, BlockPos pos) {
-        BlockPos.MutableBlockPos check = new BlockPos.MutableBlockPos();
-        for (int dy = 1; dy <= VERTICAL_CHECK_RANGE; dy++) {
-            check.set(pos.getX(), pos.getY() + dy, pos.getZ());
-            if (level.getBlockState(check).getBlock() == ModBlocks.LICH_SUMMONER.get()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static void grantTFProgressAdvancements(ServerLevel level, ServerPlayer player) {
-        var advancementManager = level.getServer().getAdvancements();
-        for (String advId : TF_PROGRESS_ADVANCEMENTS) {
-            Advancement adv = advancementManager.getAdvancement(new ResourceLocation(advId));
-            if (adv != null) {
-                var progress = player.getAdvancements().getOrStartProgress(adv);
-                if (!progress.isDone()) {
-                    for (String criterion : progress.getRemainingCriteria()) {
-                        player.getAdvancements().award(adv, criterion);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putBoolean("hasSpawned", hasSpawned);
-        tag.putBoolean("pendingRemoval", pendingRemoval);
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        hasSpawned     = tag.getBoolean("hasSpawned");
-        pendingRemoval = tag.getBoolean("pendingRemoval");
+    public static void serverTick(Level level, BlockPos pos, BlockState state, LichSummonerBlockEntity be) {
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
     }
 }

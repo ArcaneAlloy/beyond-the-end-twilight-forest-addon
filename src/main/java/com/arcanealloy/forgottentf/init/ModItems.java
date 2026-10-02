@@ -18,7 +18,7 @@ public class ModItems {
     public static final RegistryObject<Item> GIANT_CARMINITE_BLOCK =
             ITEMS.register("giant_carminite_block", () ->
                     new BlockItem(ModBlocks.GIANT_CARMINITE_BLOCK.get(),
-                            new Item.Properties()));
+                            new Item.Properties().tab(net.minecraft.world.item.CreativeModeTab.TAB_MISC)));
 
     public static final RegistryObject<Item> PHANTOM_LEGGINGS =
             ITEMS.register("phantom_leggings", () ->
@@ -27,6 +27,11 @@ public class ModItems {
     public static final RegistryObject<Item> PHANTOM_BOOTS =
             ITEMS.register("phantom_boots", () ->
                     new PhantomArmorExtensionItem(EquipmentSlot.FEET));
+
+    /** Placeholder: 4 en el cofre del tesoro de los Knight Phantom (KubeJS/LootJS). Ingrediente de la armadura fantasma en Anna. */
+    public static final RegistryObject<Item> PHANTOM_ESSENCE =
+            ITEMS.register("phantom_essence", () ->
+                    new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE).tab(net.minecraft.world.item.CreativeModeTab.TAB_MATERIALS)));
 
     public static final RegistryObject<Item> NAGA_HELMET =
             ITEMS.register("naga_helmet", () ->

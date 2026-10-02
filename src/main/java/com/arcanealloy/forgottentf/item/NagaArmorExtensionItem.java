@@ -28,7 +28,7 @@ public class NagaArmorExtensionItem extends ArmorItem {
     };
 
     public NagaArmorExtensionItem(EquipmentSlot slot) {
-        super(NAGA_MATERIAL, slot, new Properties().rarity(Rarity.UNCOMMON));
+        super(NAGA_MATERIAL, slot, new Properties().rarity(Rarity.UNCOMMON).tab(net.minecraft.world.item.CreativeModeTab.TAB_COMBAT));
     }
 
     @Override

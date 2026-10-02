@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "monstersandmushrooms:avala_chestplate",
+    "monstersandmushrooms:end_chestplate",
+    "monstersandmushrooms:gnome_chestplate",
+    "monstersandmushrooms:goat_chestplate",
+    "monstersandmushrooms:guardian_chestplate",
+    "monstersandmushrooms:warden_chestplate",
+    "monstersandmushrooms:wither_chestplate"
+  ]
+}

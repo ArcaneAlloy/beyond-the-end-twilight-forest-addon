@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "monstersandmushrooms:avala_helmet",
+    "monstersandmushrooms:end_helmet",
+    "monstersandmushrooms:gnome_helmet",
+    "monstersandmushrooms:goat_helmet",
+    "monstersandmushrooms:guardian_helmet",
+    "monstersandmushrooms:warden_helmet",
+    "monstersandmushrooms:wither_helmet"
+  ]
+}

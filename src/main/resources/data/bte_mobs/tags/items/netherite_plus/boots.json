@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "monstersandmushrooms:avala_boots",
+    "monstersandmushrooms:end_boots",
+    "monstersandmushrooms:gnome_boots",
+    "monstersandmushrooms:goat_boots",
+    "monstersandmushrooms:guardian_boots",
+    "monstersandmushrooms:warden_boots",
+    "monstersandmushrooms:wither_boots"
+  ]
+}

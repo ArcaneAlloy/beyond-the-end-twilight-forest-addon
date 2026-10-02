@@ -31,7 +31,6 @@ public class FinalCastleHandler {
     private static final int SCAN_RADIUS = 150;
 
     private static final Set<Long> processedCastles = new HashSet<>();
-    private static int tickCounter = 0;
     private static final int CHECK_INTERVAL = 100;
 
     @SubscribeEvent
@@ -40,9 +39,8 @@ public class FinalCastleHandler {
         if (!(event.player instanceof ServerPlayer player)) return;
         if (!player.level.dimension().location().getNamespace().equals("twilightforest")) return;
 
-        tickCounter++;
-        if (tickCounter < CHECK_INTERVAL) return;
-        tickCounter = 0;
+        // Contador por jugador (antes era uno global y con varios jugadores solo se comprobaba siempre al mismo)
+        if (player.tickCount % CHECK_INTERVAL != 0) return;
 
         ServerLevel serverLevel = (ServerLevel) player.level;
 

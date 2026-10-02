@@ -1,8 +1,14 @@
 package com.arcanealloy.forgottentf;
 
+import com.arcanealloy.forgottentf.event.AvalaArmorHandler;
 import com.arcanealloy.forgottentf.event.CastleRainHandler;
+import com.arcanealloy.forgottentf.event.FieryArmorHandler;
 import com.arcanealloy.forgottentf.event.FinalCastleHandler;
 import com.arcanealloy.forgottentf.event.GiantCarminiteBreakHandler;
+import com.arcanealloy.forgottentf.event.IgnitiumArmorHandler;
+import com.arcanealloy.forgottentf.event.InfestedTempleLichHandler;
+import com.arcanealloy.forgottentf.event.NetheritePlusArmorHandler;
+import com.arcanealloy.forgottentf.event.TFProgressionHandler;
 import com.arcanealloy.forgottentf.event.TrollCaveHandler;
 import com.arcanealloy.forgottentf.init.ModBlocks;
 import com.arcanealloy.forgottentf.init.ModBlockEntities;
@@ -28,5 +34,11 @@ public class ForgottenTF {
         MinecraftForge.EVENT_BUS.register(FinalCastleHandler.class);
         MinecraftForge.EVENT_BUS.register(GiantCarminiteBreakHandler.class);
         MinecraftForge.EVENT_BUS.register(TrollCaveHandler.class);
+        MinecraftForge.EVENT_BUS.register(TFProgressionHandler.class);
+        MinecraftForge.EVENT_BUS.register(FieryArmorHandler.class);
+        MinecraftForge.EVENT_BUS.register(AvalaArmorHandler.class);
+        MinecraftForge.EVENT_BUS.register(NetheritePlusArmorHandler.class);
+        MinecraftForge.EVENT_BUS.register(IgnitiumArmorHandler.class);
+        MinecraftForge.EVENT_BUS.register(InfestedTempleLichHandler.class);
     }
 }

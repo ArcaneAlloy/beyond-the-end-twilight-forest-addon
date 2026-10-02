@@ -41,7 +41,7 @@ public class PhantomArmorExtensionItem extends ArmorItem {
     };
 
     public PhantomArmorExtensionItem(EquipmentSlot slot) {
-        super(PHANTOM_MATERIAL, slot, new Properties().rarity(Rarity.UNCOMMON));
+        super(PHANTOM_MATERIAL, slot, new Properties().rarity(Rarity.UNCOMMON).tab(net.minecraft.world.item.CreativeModeTab.TAB_COMBAT));
     }
 
     @Override
