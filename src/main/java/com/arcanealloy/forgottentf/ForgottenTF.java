@@ -10,6 +10,7 @@ import com.arcanealloy.forgottentf.event.InfestedTempleLichHandler;
 import com.arcanealloy.forgottentf.event.NetheritePlusArmorHandler;
 import com.arcanealloy.forgottentf.event.TFProgressionHandler;
 import com.arcanealloy.forgottentf.event.TrollCaveHandler;
+import com.arcanealloy.forgottentf.event.TwilightReturnHandler;
 import com.arcanealloy.forgottentf.init.ModBlocks;
 import com.arcanealloy.forgottentf.init.ModBlockEntities;
 import com.arcanealloy.forgottentf.init.ModItems;
@@ -40,5 +41,6 @@ public class ForgottenTF {
         MinecraftForge.EVENT_BUS.register(NetheritePlusArmorHandler.class);
         MinecraftForge.EVENT_BUS.register(IgnitiumArmorHandler.class);
         MinecraftForge.EVENT_BUS.register(InfestedTempleLichHandler.class);
+        MinecraftForge.EVENT_BUS.register(TwilightReturnHandler.class);
     }
 }
