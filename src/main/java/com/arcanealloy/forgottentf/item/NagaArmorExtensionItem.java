@@ -33,9 +33,8 @@ public class NagaArmorExtensionItem extends ArmorItem {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        // Placeholder: textura de hierro
-        return "minecraft:textures/models/armor/iron_layer_" +
-               (slot == EquipmentSlot.LEGS ? "2" : "1") + ".png";
+        // Casco y botas van en la capa 1 (la capa 2 es solo para pantalones, que pone Twilight Forest)
+        return "forgottentf:textures/models/armor/naga_layer_1.png";
     }
 
     @Override

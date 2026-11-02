@@ -47,7 +47,7 @@ public class PhantomArmorExtensionItem extends ArmorItem {
     @Override
     public String getArmorTexture(ItemStack stack, net.minecraft.world.entity.Entity entity,
                                   EquipmentSlot slot, String type) {
-        return "minecraft:textures/models/armor/diamond_layer_" +
+        return "forgottentf:textures/models/armor/phantom_layer_" +
                (slot == EquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
